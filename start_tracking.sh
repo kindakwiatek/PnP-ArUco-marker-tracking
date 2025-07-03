@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script pulls and launches 'tracking.py' from the GitHub repository.
+# This script pulls and launches 'tracking.py' from the GitHub repository
 
 echo "Tracking launcher script is running."
 
