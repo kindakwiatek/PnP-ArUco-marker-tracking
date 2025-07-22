@@ -1,11 +1,11 @@
 #!/bin/bash
 # ==============================================================================
-# firstrun.sh - One-Time System Setup (Revised)
+# firstrun.sh - One-Time System Setup
 # ==============================================================================
 #
 # Description:
 # This script runs ONLY ONCE on the first boot.
-# 1. It sets the hostname from user_settings.conf.
+# 1. It sets the hostname from pi_settings.conf.
 # 2. It sets up a permanent systemd service for the main launcher.
 # 3. It cleans itself up to prevent re-running.
 #
@@ -17,12 +17,12 @@ exec &> /boot/firmware/firstrun.log
 echo "--- Starting firstrun.sh at $(date) ---"
 
 # --- Configuration File ---
-USER_SETTINGS_FILE="/boot/firmware/user_settings.conf"
-if [ -f "$USER_SETTINGS_FILE" ]; then
-    source "$USER_SETTINGS_FILE"
-    echo "Loaded settings from $USER_SETTINGS_FILE"
+PI_SETTINGS_FILE="/boot/firmware/pi_settings.conf"
+if [ -f "$PI_SETTINGS_FILE" ]; then
+    source "$PI_SETTINGS_FILE"
+    echo "Loaded settings from $PI_SETTINGS_FILE"
 else
-    echo "ERROR: Configuration file not found at $USER_SETTINGS_FILE. Exiting."
+    echo "ERROR: Configuration file not found at $PI_SETTINGS_FILE. Exiting."
     exit 1
 fi
 

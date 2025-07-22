@@ -1,1 +1,20 @@
-**/bootfs/user_settings.conf
+Ignore the user-specific Raspberry Pi settings file
+
+**/bootfs/pi_settings.conf
+Ignore the user-specific client settings file
+
+client_settings.py
+Python cache
+
+pycache/
+*.pyc
+Calibration data files
+
+*.json
+Calibration image folders
+
+distortion-calibration-images/
+pnp-calibration-images/
+Log files
+
+*.log

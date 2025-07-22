@@ -1,21 +1,20 @@
-"""
-config.py
-
-Stores shared configuration settings for the motion capture project.
-This includes network, camera, ArUco marker, and calibration parameters.
-"""
+# config.py
+#
+# Stores shared configuration settings for the motion capture project.
+# This includes network, camera, ArUco marker, and calibration parameters.
 
 import cv2
 
 # --- Network Settings ---
 # A list of server hostnames or IP addresses to connect to.
+# The .local domain is handled by mDNS (Avahi/Bonjour).
 SERVER_HOSTS = ['pi-mocap-1.local', 'pi-mocap-2.local']
 # The network port for communication between the client and servers.
 NETWORK_PORT = 65432
 
 # --- Camera and Frame Settings ---
-FRAME_WIDTH = 1280  # Frame width in pixels
-FRAME_HEIGHT = 720  # Frame height in pixels
+FRAME_WIDTH = 1280  # Frame width in pixels.
+FRAME_HEIGHT = 720  # Frame height in pixels.
 
 # --- ArUco Marker Settings ---
 # The specific ArUco dictionary to use for marker detection.
@@ -32,7 +31,8 @@ NUM_PNP_FRAMES = 50
 # Directory to save images captured during the PnP process for debugging.
 PNP_IMAGES_FOLDER = "pnp-calibration-images"
 # File to save the final calculated camera pose (position and orientation).
-PNP_DATA_FILE = "pnp_camera_pose.json"
+# This will be specific to each Pi, e.g., pnp_camera_pose_pi-mocap-1.local.json
+PNP_DATA_FILE_PREFIX = "pnp_camera_pose"
 
 # IMPORTANT: Define the real-world 3D coordinates for each PnP marker.
 # This establishes the origin and orientation of your world coordinate system.
@@ -51,7 +51,7 @@ PNP_MARKER_WORLD_COORDINATES = {
 # --- Initial Distortion Calibration Settings ---
 # The dimensions of your chessboard pattern (number of squares, not internal corners).
 CHESSBOARD_DIMENSIONS = (10, 7)  # (squares_wide, squares_high)
-# The directory where chessboard calibration images are stored.
+# The directory where chessboard calibration images are stored on the server.
 DISTORTION_IMAGES_FOLDER = "distortion-calibration-images"
 # The file where the camera's intrinsic matrix and distortion coefficients are stored.
 DISTORTION_DATA_FILE = "distortion_calibration.json"

@@ -1,16 +1,16 @@
 #!/bin/bash
 # ==============================================================================
-# wifi-connect.sh - Permanent WiFi Connection Script (Revised)
+# wifi-connect.sh - Permanent WiFi Connection Script
 # ==============================================================================
 #
 # Description:
 # This script runs on boot to establish a Wi-Fi connection. It reads all
-# network configuration from /boot/firmware/user_settings.conf.
+# network configuration from /boot/firmware/pi_settings.conf.
 #
 # ==============================================================================
 
 LOG_FILE="/boot/firmware/wifi_connect.log"
-USER_SETTINGS_FILE="/boot/firmware/user_settings.conf"
+PI_SETTINGS_FILE="/boot/firmware/pi_settings.conf"
 WIFI_INTERFACE="wlan0"
 
 # Safe logging function
@@ -25,11 +25,11 @@ log "Initial delay to allow system to settle."
 sleep 5
 
 # 1. Load configuration
-if [ ! -f "$USER_SETTINGS_FILE" ]; then
-    log "ERROR: Settings file not found at '$USER_SETTINGS_FILE'. Cannot connect."
+if [ ! -f "$PI_SETTINGS_FILE" ]; then
+    log "ERROR: Settings file not found at '$PI_SETTINGS_FILE'. Cannot connect."
     exit 1
 fi
-source "$USER_SETTINGS_FILE"
+source "$PI_SETTINGS_FILE"
 log "Configuration loaded."
 
 # Sanitize potential Windows line endings
@@ -39,7 +39,7 @@ CONNECTION_NAME=${WIFI_SSID//$'\r'/}
 
 # 2. Check if required settings are present
 if [ -z "$CONNECTION_NAME" ]; then
-    log "ERROR: WIFI_SSID is not set in '$USER_SETTINGS_FILE'."
+    log "ERROR: WIFI_SSID is not set in '$PI_SETTINGS_FILE'."
     exit 1
 fi
 
@@ -55,7 +55,7 @@ log "Connection not active. Proceeding."
 # 4. Check if the connection profile exists. If not, create it.
 if ! nmcli connection show "$CONNECTION_NAME" > /dev/null 2>&1; then
     log "Connection profile '$CONNECTION_NAME' not found. Creating it..."
-    
+
     # Check for Enterprise credentials
     if [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
         log "Found Enterprise credentials. Creating WPA2-EAP profile."
@@ -66,7 +66,7 @@ if ! nmcli connection show "$CONNECTION_NAME" > /dev/null 2>&1; then
         log "No Enterprise credentials. Creating standard WPA2-PSK profile (will prompt for password if needed)."
         nmcli connection add type wifi con-name "$CONNECTION_NAME" ifname "$WIFI_INTERFACE" ssid "$WIFI_SSID" >> "$LOG_FILE" 2>&1
     fi
-    
+
     if [ $? -ne 0 ]; then
         log "ERROR: Failed to create connection profile."
         exit 1
