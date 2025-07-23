@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-# wifi-connect.sh - Permanent WiFi Connection Script
+# wifi_connect.sh - Permanent WiFi Connection Script
 # ==============================================================================
 #
 # Description:

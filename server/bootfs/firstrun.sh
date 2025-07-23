@@ -4,10 +4,10 @@
 # ==============================================================================
 #
 # Description:
-# This script runs ONLY ONCE on the first boot.
-# 1. It sets the hostname from pi_settings.conf.
-# 2. It sets up a permanent systemd service for the main launcher.
-# 3. It cleans itself up to prevent re-running.
+# This script runs ONLY ONCE on the first boot
+# 1. It sets the hostname specified in pi_settings.conf
+# 2. It sets up a permanent systemd service for the main launcher
+# 3. It cleans itself up to prevent re-running
 #
 # ==============================================================================
 
@@ -42,7 +42,6 @@ else
 fi
 echo "Hostname setup complete."
 
-# (User setup remains unchanged)
 FIRSTUSER=$(getent passwd 1000 | cut -d: -f1)
 if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then
     /usr/lib/raspberrypi-sys-mods/imager_custom enable_ssh
@@ -60,7 +59,6 @@ else
     fi
 fi
 echo "User and SSH setup complete."
-
 
 # ==================== PERMANENT LAUNCHER SERVICE SETUP ====================
 echo "--- Creating Permanent Launcher Service ---"
@@ -101,7 +99,7 @@ LAUNCHERSERVICEOF
 fi
 # ================= END OF PERMANENT LAUNCHER SERVICE SETUP =================
 
-# (Locale and Keyboard setup remains unchanged)
+# --- Locale and Keyboard Setup ---
 echo "Configuring locale and keyboard..."
 if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then
     /usr/lib/raspberrypi-sys-mods/imager_custom set_keymap 'gb'
@@ -113,7 +111,7 @@ else
 fi
 echo "Locale and keyboard setup complete."
 
-# (Final Cleanup remains unchanged)
+# --- Final Cleanup ---
 echo "--- Running final cleanup ---"
 if [ -f /boot/firmware/firstrun.sh ]; then
     rm -f /boot/firmware/firstrun.sh

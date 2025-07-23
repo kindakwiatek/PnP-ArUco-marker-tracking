@@ -5,20 +5,20 @@
 # Description:
 # This script runs at boot after the network is online. It manages the
 # lifecycle of the motion capture application by:
-#   1. Reading settings from pi_settings.conf.
-#   2. Cloning or pulling the latest version from a Git repository.
-#   3. Installing Python dependencies.
-#   4. Launching the main server application.
-#   5. Self-updating from the repository.
+#   1. Reading settings from pi_settings.conf
+#   2. Cloning or pulling the latest version from a Git repository
+#   3. Installing Python dependencies
+#   4. Launching the main server application
+#   5. Self-updating from the repository
 #
 # ==============================================================================
 
-set -e # Exit immediately if a command exits with a non-zero status.
+set -e # Exit immediately if a command exits with a non-zero status
 
 # --- Configuration & Logging ---
 readonly PI_SETTINGS_FILE="/boot/firmware/pi_settings.conf"
 readonly LOG_FILE="/boot/firmware/launcher.log"
-readonly LAUNCHER_SCRIPT_NAME="launcher.sh" # The name of this script
+readonly LAUNCHER_SCRIPT_NAME="launcher.sh" # The filename of this script
 
 # --- Logging Function ---
 log() {
@@ -45,11 +45,11 @@ update_repository() {
         log "Repository exists. Pulling latest changes..."
         cd "$REPO_DIR"
         git fetch origin
-        # Reset to the main branch to avoid conflicts and ensure a clean state.
+        # Reset to the main branch to avoid conflicts and ensure a clean state
         git reset --hard origin/main
         git pull
     fi
-    # Ensure correct ownership of all repository files.
+    # Ensure correct ownership of all repository files
     chown -R user:user "$(dirname "$REPO_DIR")"
     cd "$REPO_DIR"
     log "Repository is up-to-date."
@@ -58,7 +58,7 @@ update_repository() {
 install_dependencies() {
     log "Installing/updating Python dependencies..."
     if [ -f "$REPO_DIR/requirements.txt" ]; then
-        # Run pip as the 'user' to avoid permission issues with home directory.
+        # Run pip as the 'user' to avoid permission issues with home directory
         sudo -u user python3 -m pip install --upgrade pip
         sudo -u user python3 -m pip install -r "$REPO_DIR/requirements.txt"
         log "Dependencies installed from requirements.txt."
@@ -73,10 +73,10 @@ update_launcher_script() {
     local current_script_path="/boot/firmware/$LAUNCHER_SCRIPT_NAME"
 
     if [ -f "$new_launcher_path" ]; then
-        # Compare the new script with the current one.
+        # Compare the new script with the current one
         if ! cmp -s "$new_launcher_path" "$current_script_path"; then
             log "New launcher version found. Updating..."
-            # Overwrite the script on the boot partition.
+            # Overwrite the script on the boot partition
             cp "$new_launcher_path" "$current_script_path"
             chmod +x "$current_script_path"
             log "Launcher script updated. A reboot is required for changes to take effect."
@@ -90,7 +90,7 @@ launch_server() {
     local server_script_path="$REPO_DIR/server.py"
     if [ -f "$server_script_path" ]; then
         log "Launching server application: $server_script_path"
-        # Run the server as the 'user' from within the repository directory.
+        # Run the server as the 'user' from within the repository directory
         cd "$REPO_DIR"
         sudo -u user /usr/bin/python3 "$server_script_path"
     else
@@ -101,7 +101,7 @@ launch_server() {
 
 # --- Script Execution ---
 main() {
-    # Load settings first.
+    # Load settings first
     if [ -f "$PI_SETTINGS_FILE" ]; then
         source "$PI_SETTINGS_FILE"
     else
@@ -109,7 +109,7 @@ main() {
         exit 1
     fi
 
-    # Verify essential variables are set.
+    # Verify essential variables are set
     if [ -z "$REPO_URL" ] || [ -z "$REPO_DIR" ]; then
         log "FATAL: REPO_URL or REPO_DIR is not set in pi_settings.conf."
         exit 1
@@ -118,9 +118,9 @@ main() {
     wait_for_network
     update_repository
     install_dependencies
-    update_launcher_script # Self-update after pulling new code.
+    update_launcher_script # Self-update after pulling new code
     launch_server
 }
 
-# Run the main function, redirecting all output to the log file.
+# Run the main function, redirecting all output to the log file
 main &>> "$LOG_FILE"

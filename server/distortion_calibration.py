@@ -40,7 +40,7 @@ def capture_and_save_image(picam2, hostname):
     """Captures a single frame and saves it if a chessboard is found."""
     chessboard_corners = (config.CHESSBOARD_DIMENSIONS[0] - 1, config.CHESSBOARD_DIMENSIONS[1] - 1)
     
-    # Create the output folder if it doesn't exist.
+    # Create the output folder if it doesn't exist
     output_dir = os.path.join(os.path.dirname(__file__), '..', config.DISTORTION_IMAGES_FOLDER)
     os.makedirs(output_dir, exist_ok=True)
 
@@ -80,15 +80,15 @@ def run_calibration_process():
         print(f"Error: Image directory '{image_dir}' not found.")
         return False
 
-    # Termination criteria for the corner sub-pixel algorithm.
+    # Termination criteria for the corner sub-pixel algorithm
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
-    # Prepare object points, like (0,0,0), (1,0,0), ..., (8,5,0).
+    # Prepare object points, like (0,0,0), (1,0,0), ..., (8,5,0)
     objp = np.zeros((chessboard_corners[0] * chessboard_corners[1], 3), np.float32)
     objp[:, :2] = np.mgrid[0:chessboard_corners[0], 0:chessboard_corners[1]].T.reshape(-1, 2)
 
-    objpoints = []  # 3D points in real-world space.
-    imgpoints = []  # 2D points in the image plane.
+    objpoints = []  # 3D points in real-world space
+    imgpoints = []  # 2D points in the image plane
     
     images = [f for f in os.listdir(image_dir) if f.startswith('calibration_') and f.endswith('.png')]
     
@@ -121,7 +121,7 @@ def run_calibration_process():
             'camera_matrix': mtx.tolist(),
             'distortion_coefficients': dist.tolist()
         }
-        # Save the data to the JSON file in the project root.
+        # Save the data to the JSON file in the project root
         save_path = os.path.join(os.path.dirname(__file__), '..', config.DISTORTION_DATA_FILE)
         with open(save_path, 'w') as f:
             json.dump(calibration_data, f, indent=4)
