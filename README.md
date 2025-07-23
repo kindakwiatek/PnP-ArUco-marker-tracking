@@ -96,7 +96,7 @@ This project uses a fully headless setup. Repeat these steps for each Raspberry 
 2.  **Copy Boot Files:** After flashing, mount the microSD card. It will contain a partition named `bootfs`. Copy all files from the `server/bootfs` folder in this repository directly into the root of the `bootfs` partition on the microSD card.
 3.  **Configure Unique Hostname:**
     -   On the `bootfs` partition of the microSD card, edit the `pi_settings.conf` file you just copied.
-    -   Change the `NEW_HOSTNAME` value to be unique for this Pi (e.g., `pi_mocap_1`, `pi_mocap_2`).
+    -   Change the `NEW_HOSTNAME` value to be unique for this Pi (e.g., `pi-mocap-1`, `pi-mocap-2`).
     -   **Each Pi must have a unique hostname.**
 
 ### Step 3: Physical Marker Setup

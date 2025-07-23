@@ -8,7 +8,7 @@ import cv2
 # --- Network Settings ---
 # A list of server hostnames or IP addresses to connect to
 # The .local domain is handled by mDNS (Avahi/Bonjour)
-SERVER_HOSTS = ['pi_mocap_1.local', 'pi_mocap_2.local', 'pi_mocap_3.local', 'pi_mocap_4.local']
+SERVER_HOSTS = ['pi-mocap-1.local', 'pi-mocap-2.local', 'pi-mocap-3.local', 'pi-mocap-4.local']
 # The network port for communication between the client and servers
 NETWORK_PORT = 65432
 

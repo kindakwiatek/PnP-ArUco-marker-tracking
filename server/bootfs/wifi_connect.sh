@@ -3,6 +3,11 @@
 # wifi_connect.sh - Permanent WiFi Connection Script
 # ==============================================================================
 #
+# IMPORTANT: If you edit this file on Windows, you MUST save it with
+# Unix-style line endings (LF), not Windows-style (CRLF). Use an editor
+# like VS Code or Notepad++ to ensure this is correct, otherwise you will get
+# syntax errors.
+#
 # Description:
 # This script runs on boot to establish a Wi-Fi connection. It reads all
 # network configuration from /boot/firmware/pi_settings.conf.

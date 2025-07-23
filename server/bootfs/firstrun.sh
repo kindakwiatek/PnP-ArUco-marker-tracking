@@ -3,6 +3,11 @@
 # firstrun.sh - One-Time System Setup
 # ==============================================================================
 #
+# IMPORTANT: If you edit this file on Windows, you MUST save it with
+# Unix-style line endings (LF), not Windows-style (CRLF). Use an editor
+# like VS Code or Notepad++ to ensure this is correct, otherwise you will get
+# syntax errors.
+#
 # Description:
 # This script runs ONLY ONCE on the first boot
 # 1. It sets the hostname specified in pi_settings.conf

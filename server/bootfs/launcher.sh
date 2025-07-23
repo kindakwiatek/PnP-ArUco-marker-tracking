@@ -2,6 +2,11 @@
 # ==============================================================================
 # launcher.sh
 #
+# IMPORTANT: If you edit this file on Windows, you MUST save it with
+# Unix-style line endings (LF), not Windows-style (CRLF). Use an editor
+# like VS Code or Notepad++ to ensure this is correct, otherwise you will get
+# syntax errors.
+#
 # Description:
 # This script runs at boot after the network is online. It manages the
 # lifecycle of the motion capture application by:
