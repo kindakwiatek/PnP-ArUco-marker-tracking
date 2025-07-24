@@ -4,20 +4,18 @@ This project implements a multi-camera motion capture system using Raspberry Pis
 
 ## Table of Contents
 
-* [Overview](#overview)
-* [How It Works](#how-it-works)
-* [Hardware Requirements](#hardware-requirements)
-* [Software & Dependencies](#software--dependencies)
-* [Repository Structure](#repository-structure)
-* [Setup Instructions](#setup-instructions)
-  * [Step 1: Client Machine Setup](#step-1-client-machine-setup)
-  * [Step 2: Initial Pi Setup (microSD Card)](#step-2-initial-pi-setup-microsd-card)
-  * [Step 3: Physical Marker Setup](#step-3-physical-marker-setup)
-  * [Step 4: Headless Distortion Calibration](#step-4-headless-distortion-calibration)
-  * [Step 5: System Deployment](#step-5-system-deployment)
-* [Usage](#usage)
-* [Configuration Files](#configuration-files)
-
+- [Overview](#overview)
+- [How It Works](#how-it-works)
+- [Hardware Requirements](#hardware-requirements)
+- [Software and Dependencies](#software-and-dependencies)
+- [Repository Structure](#repository-structure)
+- [Setup Instructions](#setup-instructions)
+  - [Step 1: Client Machine Setup](#step-1-client-machine-setup)
+  - [Step 2: Initial Pi Setup (microSD Card)](#step-2-initial-pi-setup-microsd-card)
+  - [Step 3: Physical Marker Setup](#step-3-physical-marker-setup)
+  - [Step 4: Headless Distortion Calibration](#step-4-headless-distortion-calibration)
+- [Usage](#usage)
+- [Configuration Files](#configuration-files)
 
 ## Overview
 
@@ -30,9 +28,9 @@ The initial camera positions are unknown. To solve this, the system uses a PnP c
 1.  **Headless Setup:** A `firstrun.sh` script automatically configures each Raspberry Pi on its first boot, setting the hostname, connecting to Wi-Fi, and installing all necessary software from a Git repository.
 2.  **Distortion Calibration:** Each camera's lens distortion is corrected. This is done remotely from the client machine using a headless script that analyzes images of a chessboard pattern.
 3.  **Server Deployment:** A `server.py` script runs automatically on each Raspberry Pi. It captures the camera feed, detects ArUco markers, and streams their 2D image coordinates over the network.
-4.  **Client Control:** The `motion_capture.ipynb` Jupyter Notebook acts as the central control panel. It connects to all Pi servers to receive data and manage the system.
+4.  **Client Control:** The `mocap.ipynb` Jupyter Notebook acts as the central control panel. It connects to all Pi servers to receive data and manage the system.
 5.  **PnP Pose Estimation:** The notebook uses a predefined set of ArUco markers with known 3D world coordinates to calculate each camera's pose (rotation and translation vectors) in real-time.
-6.  **3D Triangulation & Visualization:** Once at least two cameras have determined their poses, the notebook triangulates the 3D position of any other tracked markers and displays the cameras and markers in a live 3D plot.
+6.  **3D Triangulation and Visualization:** Once at least two cameras have determined their poses, the notebook triangulates the 3D position of any other tracked markers and displays the cameras and markers in a live 3D plot.
 
 ## Hardware Requirements
 
@@ -43,9 +41,9 @@ The initial camera positions are unknown. To solve this, the system uses a PnP c
 -   **Network:** Wi-Fi network that all devices can connect to.
 -   **Calibration Patterns:**
     -   A printed chessboard pattern for distortion calibration.
-    -   A set of printed ArUco markers (from a 5x5 dictionary) for PnP and tracking.
+    -   A set of printed ArUco markers for PnP and tracking.
 
-## Software & Dependencies
+## Software and Dependencies
 
 -   **Operating System:** Raspberry Pi OS Lite (64-bit recommended) for the Pis.
 -   **Python:** Python 3.
@@ -58,21 +56,24 @@ The initial camera positions are unknown. To solve this, the system uses a PnP c
 
 ## Repository Structure
 
-```
+````
+
 .
+├── assets/                     \# For client-generated images (markers, chessboard, etc.)
 ├── server/
-│   ├── bootfs/
-│   │   ├── firstrun.sh                 # Initial Pi setup script
-│   │   ├── launcher.sh                 # Starts the server on boot
-│   │   ├── template_pi_settings.conf   # Template for all settings
-│   │   └── wifi_connect.sh             # Wi-Fi connection script
-│   ├── distortion_calibration.py
-│   └── server.py
-├── motion_capture.ipynb                # Main client control notebook
-├── config.py
+│   ├── bootfs/                 \# Scripts for initial Pi configuration
+│   │   ├── firstrun.sh
+│   │   ├── launcher.sh
+│   │   ├── template\_pi\_settings.conf
+│   │   └── wifi\_connector.sh
+│   ├── distortion\_calibration.py \# Headless script for camera calibration
+│   └── server.py               \# Main server application running on each Pi
+├── mocap.ipynb                 \# Central client control notebook
+├── config.py                   \# Shared system configuration
 ├── requirements.txt
 └── README.md
-```
+
+````
 
 ## Setup Instructions
 
@@ -92,55 +93,40 @@ The initial camera positions are unknown. To solve this, the system uses a PnP c
 
 This project uses a fully headless setup. Repeat these steps for each Raspberry Pi.
 
-1.  **Flash microSD Card:** Flash Raspberry Pi OS Lite onto a microSD card using the **Raspberry Pi Imager**. **You must click "Yes" to "Would you like to apply OS customisation settings?" in the Raspberry Pi Imager.** This is just to ensure that `firstrun.sh` is executed on first boot. Any custom settings you apply will be overwritten when you replace `firstrun.sh` with the version from this repository.
-2.  **Copy Boot Files:** After flashing, mount the microSD card. It will contain a partition named `bootfs`. Copy all files from the `server/bootfs` folder in this repository directly into the root of the `bootfs` partition on the microSD card. Ensure that you replace the existing `firstrun.sh` file when doing so.
+1.  **Flash microSD Card:** Flash Raspberry Pi OS Lite onto a microSD card using the **Raspberry Pi Imager**. You must enable SSH and pre-configure a user in the imager settings.
+2.  **Copy Boot Files:** After flashing, mount the microSD card. It will contain a partition named `bootfs`. Copy all files from the `server/bootfs` folder in this repository directly into the root of the `bootfs` partition on the microSD card, replacing existing files.
 3.  **Configure Unique Hostname:**
     -   On the `bootfs` partition of the microSD card, edit the `pi_settings.conf` file you just copied.
-    -   Change the `NEW_HOSTNAME` value to be unique for this Pi (e.g., `pi-mocap-1`, `pi-mocap-2`).
-    -   **Each Pi must have a unique hostname.**
+    -   Change the `NEW_HOSTNAME` value to be unique for this Pi (e.g., `pi-mocap-1`). Each Pi must have a unique hostname.
 
 ### Step 3: Physical Marker Setup
 
-1.  **Print Markers:** Print the ArUco markers you intend to use from the `DICT_5X5_50` dictionary.
-2.  **Define World Coordinates:** Choose at least 4 markers to be your static PnP calibration markers.
-3.  **Measure and Record:** Place these markers in your capture volume and precisely measure their `(X, Y, Z)` coordinates in centimeters. Update the `PNP_MARKER_WORLD_COORDINATES` dictionary in `config.py` with these measured values. This defines your world origin.
+1.  **Generate and Print Markers:** Use **Part 1** of the `mocap.ipynb` notebook to generate the ArUco markers and the chessboard pattern, then print them. The generated files will be saved in the `assets` directory.
+2.  **Define World Coordinates:** Choose at least 4 markers to be your static PnP calibration markers. Place these markers in your capture volume and precisely measure their `(X, Y, Z)` coordinates in centimeters.
+3.  **Update Config:** Update the `PNP_MARKER_WORLD_COORDINATES` dictionary in `config.py` with these measured values. This defines your world origin.
 
 ### Step 4: Headless Distortion Calibration
 
-For each camera, you must perform a one-time distortion calibration. This is done remotely from the `motion_capture.ipynb` notebook.
+For each camera, you must perform a one-time distortion calibration. This is done remotely from the `mocap.ipynb` notebook.
 
-1.  **Power On a Pi:** Insert the prepared microSD card into a single Pi and power it on. Wait a few minutes for it to connect to the network.
-2.  **Launch the Notebook:** On your client machine, start Jupyter and open `motion_capture.ipynb`.
-3.  **Run Calibration Cells:** Follow the instructions in **Section 3** of the notebook to remotely command the Pi to capture images of the chessboard and run the calibration.
-4.  **Download Data:** The notebook will automatically download the resulting `distortion_calibration.json` file to your project root. This file is used for all identical camera models.
-5.  Repeat the process if you have different models of cameras.
-
-### Step 5: System Deployment
-
-1.  **Insert microSD Cards:** Insert the configured microSD cards into each Pi and power them on.
-2.  **First Boot:** On the first boot, `firstrun.sh` will:
-    -   Set the unique hostname.
-    -   Configure and connect to your Wi-Fi network.
-    -   Set up the SSH user and password from `pi_settings.conf`.
-    -   Set up the `launcher.service` to automatically start the application on boot.
-    -   Reboot.
-3.  **Automatic Start:** On all subsequent boots, the `launcher.sh` script will run automatically. It will:
-    -   Pull the latest code from the GitHub repository specified in `pi_settings.conf`.
-    -   Install/update Python dependencies.
-    -   Launch the `server.py` application.
+1.  **Power On a Pi:** Insert the prepared microSD card into a single Pi and power it on. Wait for it to connect to the network.
+2.  **Launch the Notebook:** On your client machine, start Jupyter and open `mocap.ipynb`.
+3.  **Run Calibration:** Follow the instructions in **Part 3** of the notebook (`Headless Distortion Calibration`) to remotely command the Pi to capture images of the chessboard and run the calibration.
+4.  **Download Data:** The notebook will automatically download the resulting `distortion_calibration.json` file to your project root. This file can be used for all identical camera models.
 
 ## Usage
 
-All system control is handled through the `motion_capture.ipynb` Jupyter Notebook.
+All system control is handled through the `mocap.ipynb` Jupyter Notebook.
 
 1.  **Start Servers:** Power on all your configured Raspberry Pi servers.
-2.  **Run the Notebook:** On your client computer, open and run the cells in `motion_capture.ipynb`.
+2.  **Run the Notebook:** On your client computer, open and run the cells in `mocap.ipynb`.
 3.  **Control the System:**
-    -   **Section 2:** Remotely reboot all servers.
-    -   **Section 3:** Perform headless distortion calibration for a new camera.
-    -   **Section 4:** Launch the live 3D visualization to begin tracking.
+    -   **Part 1:** Generate assets (markers, chessboard) for printing.
+    -   **Part 2:** Perform local tests of marker detection and distortion correction.
+    -   **Part 3:** Manage remote servers (reboot, calibrate).
+    -   **Part 4:** Launch the live 3D visualization to begin tracking.
 
 ## Configuration Files
 
 -   **`config.py`:** Contains shared project parameters like network ports, ArUco marker settings, and the list of server hostnames.
--   **`server/bootfs/pi_settings.conf`:** The master settings file. Contains Pi-specific settings (hostname, Wi-Fi) and global settings (SSH credentials, repository URL). A copy of this file on each Pi's `bootfs` partition controls its behavior.
+-   **`server/bootfs/pi_settings.conf`:** The master settings file. Contains Pi-specific settings (hostname, Wi-Fi) and global settings (SSH credentials, repository URL).

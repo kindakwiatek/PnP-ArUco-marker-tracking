@@ -1,16 +1,44 @@
-Ignore the user-specific Raspberry Pi settings file
-**/bootfs/pi_settings.conf
+# IDE/Editor specific files
+.vscode/
+.idea/
 
-Calibration data files
-*.json
-
-Calibration image folders
-distortion-calibration-images/
-pnp-calibration-images/
-
-Log files
-*.log
-
-Python cache
-pycache/
+# Python cache
+__pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs
+*.log
+client_logs/
+server_logs/
+
+# Generated assets directory
+assets/
+
+# User-specific configuration and calibration data
+server/bootfs/pi_settings.conf
+distortion_calibration.json
+pnp_camera_pose_*.json
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST

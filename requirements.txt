@@ -1,8 +1,8 @@
-numpy==1.26.4
-opencv-contrib-python==4.9.0.80
-scp==0.15.0
-paramiko==3.5.1
-PyOpenGL==3.1.9
-PyQt5==5.15.10
-pyqtgraph==0.13.4
-picamera2==0.3.27
+numpy>=1.26.0
+opencv-contrib-python>=4.9.0
+paramiko>=3.5.0
+scp>=0.15.0
+PyQt5>=5.15.0
+pyqtgraph>=0.13.0
+picamera2>=0.3.0
+matplotlib>=3.8.0
