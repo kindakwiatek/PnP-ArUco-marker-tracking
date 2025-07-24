@@ -21,6 +21,9 @@ FRAME_HEIGHT = 720  # Frame height in pixels
 ARUCO_DICT = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_50)
 # The total number of unique markers the system is configured to track
 NUM_MARKERS = 50
+MARKER_SIZE = 140 # [px]
+MARKER_BORDER_WIDTH = 20 # [%]
+MARKER_FOLDER = "markers"
 
 # --- PnP Runtime Calibration Settings ---
 # The number of markers used to establish the world coordinate system
@@ -51,7 +54,12 @@ PNP_MARKER_WORLD_COORDINATES = {
 # --- Initial Distortion Calibration Settings ---
 # The dimensions of your chessboard pattern (number of squares, not internal corners)
 CHESSBOARD_DIMENSIONS = (10, 7)  # (squares_wide, squares_high)
+CHESSBOARD_SQUARE_SIZE = 80 # [px]
+CHESSBOARD_FILENAME = "chessboard.png"
 # The directory where chessboard calibration images are stored on the server
 DISTORTION_IMAGES_FOLDER = "distortion_calibration_images"
 # The file where the camera's intrinsic matrix and distortion coefficients are stored
 DISTORTION_DATA_FILE = "distortion_calibration.json"
+# Configuration
+FRAME_WIDTH = 1280 # [px]
+FRAME_HEIGHT = 720 # [px]

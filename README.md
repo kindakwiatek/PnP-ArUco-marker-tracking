@@ -92,8 +92,8 @@ The initial camera positions are unknown. To solve this, the system uses a PnP c
 
 This project uses a fully headless setup. Repeat these steps for each Raspberry Pi.
 
-1.  **Flash microSD Card:** Flash Raspberry Pi OS Lite onto a microSD card using the **Raspberry Pi Imager**. **Do not configure any settings in the Raspberry Pi Imager.** The `firstrun.sh` script will handle all setup tasks.
-2.  **Copy Boot Files:** After flashing, mount the microSD card. It will contain a partition named `bootfs`. Copy all files from the `server/bootfs` folder in this repository directly into the root of the `bootfs` partition on the microSD card.
+1.  **Flash microSD Card:** Flash Raspberry Pi OS Lite onto a microSD card using the **Raspberry Pi Imager**. **You must click "Yes" to "Would you like to apply OS customisation settings?" in the Raspberry Pi Imager.** This is just to ensure that `firstrun.sh` is executed on first boot. Any custom settings you apply will be overwritten when you replace `firstrun.sh` with the version from this repository.
+2.  **Copy Boot Files:** After flashing, mount the microSD card. It will contain a partition named `bootfs`. Copy all files from the `server/bootfs` folder in this repository directly into the root of the `bootfs` partition on the microSD card. Ensure that you replace the existing `firstrun.sh` file when doing so.
 3.  **Configure Unique Hostname:**
     -   On the `bootfs` partition of the microSD card, edit the `pi_settings.conf` file you just copied.
     -   Change the `NEW_HOSTNAME` value to be unique for this Pi (e.g., `pi-mocap-1`, `pi-mocap-2`).
